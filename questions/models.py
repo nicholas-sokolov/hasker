@@ -1,15 +1,19 @@
 import datetime
 
+from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
 
 
-class User(models.Model):
-    email = models.EmailField(max_length=50, blank=False, help_text="Enter your email")
-    login = models.CharField(max_length=20, blank=False, help_text="Enter your login")
-    password = models.CharField(max_length=50, blank=False, help_text="Enter your password")
-    profile_photo = models.ImageField()
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, models.CASCADE)
+
+    picture = models.ImageField(upload_to='profile_images', blank=True)
     register_date = models.DateField(auto_now=True)
+    website = models.URLField(blank=True)
+
+    def __unicode__(self):
+        return self.user.username
 
 
 class Question(models.Model):
@@ -17,6 +21,8 @@ class Question(models.Model):
     title = models.CharField(max_length=200, blank=False, help_text="Enter the title of your question")
     content = models.CharField(max_length=1000, blank=False, help_text="Enter the question text")
     created_date = models.DateTimeField(auto_now=True)
+    slug = models.SlugField(max_length=200, blank=True)
+
     # TODO: author, tags
 
     def __str__(self):
@@ -32,6 +38,7 @@ class Answer(models.Model):
     author = models.CharField(max_length=20, blank=False)
     created_date = models.DateField(auto_now=True)
     is_right_answer = models.BooleanField(default=False)
+
     # TODO: author, tags
 
     def __str__(self):
