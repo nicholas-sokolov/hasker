@@ -13,28 +13,40 @@
 <body>
 <div class="navbar navbar-light bg-light justify-content-between">
     <div class="container">
-        <h1>
+        <h3>
             <a class="navbar-brand" href="/">Hasker</a>
-        </h1>
+        </h3>
         <form class="form-inline">
             <div class="md-form my-0">
                 <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
             </div>
             <button class="btn btn-outline-white btn-md my-2 my-sm-0 ml-3" type="submit">Search</button>
         </form>
-        <form class="form-inline">
-            <a href="{% url 'users:login' %}" class="btn btn-sm btn-outline-secondary" type="button">Log in</a>
-            <a href="{% url 'users:register' %}" class="btn btn-outline-success" type="button">Sign Up</a>
+        <form>
+            {% if request.user.is_authenticated %}
+                <div class="btn-group">
+                    <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
+                        {{ request.user.username }}
+                    </button>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="{% url 'users:profile' request.user.username %}">Profile</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{% url 'users:logout' %}">Logout</a>
+                    </div>
+                </div>
+            {% else %}
+                <a href="{% url 'users:login' %}" class="btn btn-sm btn-outline-secondary" type="button">Log in</a>
+                <a href="{% url 'users:register' %}" class="btn btn-outline-success" type="button">Sign Up</a>
+            {% endif %}
         </form>
     </div>
 </div>
 
 <div class="content container">
-    <div class="row">
-        <div class="col-md-8">
-            {% block content %}
-            {% endblock %}
-        </div>
+    <div class="row mt-5">
+        {% block content %}
+        {% endblock %}
     </div>
 </div>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
