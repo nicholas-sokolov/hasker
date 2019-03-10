@@ -1,33 +1,42 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from django.utils import timezone
+from django.views import generic
 
-from .models import Question
 from .forms import NewQuestion
+from .models import Question
 
 
-def index(request):
-    latest_question_list = Question.objects.order_by('-created_date')[:20]
-    context = {
-        'latest_question_list': latest_question_list,
-    }
+class QuestionListView(generic.ListView):
+    template_name = 'questions/index.html'
+    context_object_name = 'latest_question_list'
+    paginate_by = 20
 
-    return render(request, 'questions/index.html', context)
-
-
-def detail(request, question_id):
-    question = get_object_or_404(Question, pk=question_id)
-    return render(request, 'questions/detail.html', {'question': question})
+    def get_queryset(self):
+        """ Return last 20 published questions """
+        return Question.objects.order_by('-created_date')
 
 
-def new_question(request):
-    if request.method == 'POST':
-        form = NewQuestion(request.POST)
+class QuestionDetailView(generic.DetailView):
+    model = Question
+    template_name = 'questions/detail.html'
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(Question, pk=self.kwargs.get('pk'))
+
+
+class NewQuestionView(generic.base.View):
+    def get(self, request, *args, **kwargs):
+        form = NewQuestion()
+        context = {'form': form}
+        return render(request, 'questions/new_question.html', context)
+
+    def post(self, request, *args, **kwargs):
+        form = NewQuestion(data=request.POST)
         if form.is_valid():
             question = form.save(commit=False)
             question.author = request.user
             question.created_date = timezone.now()
             question.save()
             return redirect('questions:detail', question_id=question.pk)
-    else:
-        form = NewQuestion()
-    return render(request, 'questions/new_question.html', {'form': form})
+
+

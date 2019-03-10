@@ -5,7 +5,7 @@
     {% if registered %}
         <strong>Thank you for registration!</strong>
     {% else %}
-        <form id="login_form" method="post" action="/login/">
+        <form id="login_form" method="post" action="{% url 'users:login' %}">
             {% csrf_token %}
             {{ form.username.label_tag }}
             {{ form.username }}
