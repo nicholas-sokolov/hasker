@@ -1,6 +1,7 @@
-from django.shortcuts import get_object_or_404, render
-from django.views import generic
 from django.contrib.auth import get_user_model
+from django.contrib.auth import logout
+from django.shortcuts import render
+from django.views import generic
 
 from questions.models import Question
 from .forms import UserProfileForm, UserForm
@@ -48,3 +49,8 @@ class SignUpView(generic.base.View):
         else:
             print(user_form.errors, profile_form.errors)
         return render(request, 'registration/register.html', {'user_form': user_form, 'profile_form': profile_form})
+
+
+def custom_logout(request):
+    logout(request)
+    return render(request, 'questions/index.html', {})
