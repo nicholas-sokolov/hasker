@@ -1,20 +1,25 @@
 {% extends 'questions/base.html' %}
 
 {% block content %}
-    <h1>Login</h1>
-    {% if registered %}
-        <strong>Thank you for registration!</strong>
-    {% else %}
+    <div class="col-md-12">
+        <h1>Login</h1>
         <form id="login_form" method="post" action="{% url 'users:login' %}">
             {% csrf_token %}
-            {{ form.username.label_tag }}
-            {{ form.username }}
-            <br>
-            {{ form.password.label_tag }}
-            {{ form.password }}
-            <br>
-            {{ form.errors }}
+            <div class="form-group">
+                <label for="id_username">{{ form.username.label_tag }}</label>
+                <input type="text" class="form-control" id="id_username" name="username">
+            </div>
+            <div class="form-group">
+                <label for="InputPassword">{{ form.password.label_tag }}</label>
+                <input type="password" class="form-control" id="InputPassword" name="password">
+            </div>
+            {% if form.errors %}
+                <p class="label label-danger">
+                    Your username and password didn't match.
+                    Please try again.
+                </p>
+            {% endif %}
             <input type="submit" name="submit" value="Login"/>
         </form>
-    {% endif %}
+    </div>
 {% endblock %}
