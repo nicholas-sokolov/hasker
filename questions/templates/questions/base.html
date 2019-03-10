@@ -7,25 +7,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="{% static 'css/questions.css' %}">
+    <link rel="stylesheet" href="{% static 'questions/questions.css' %}">
     <title>Hasker</title>
 </head>
 <body>
-<div class="navbar navbar-light bg-light container">
-    <h1>
-        <a class="navbar-brand" href="/">Hasker</a>
-    </h1>
-    <form class="form-inline">
-        <div class="input-group">
-            <div class="input-group-prepend">
-                <span class="input-group-text" id="basic-addon1">&#128269</span>
+<div class="navbar navbar-light bg-light justify-content-between">
+    <div class="container">
+        <h1>
+            <a class="navbar-brand" href="/">Hasker</a>
+        </h1>
+        <form class="form-inline">
+            <div class="md-form my-0">
+                <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
             </div>
-            <input type="text" class="form-control" placeholder="Search" aria-label="Search"
-                   aria-describedby="basic-addon1">
-            <button class="btn btn-sm btn-outline-secondary" type="button">Log in</button>
-            <button class="btn btn-outline-success" type="button">Sign Up</button>
-        </div>
-    </form>
+            <button class="btn btn-outline-white btn-md my-2 my-sm-0 ml-3" type="submit">Search</button>
+        </form>
+        <form class="form-inline">
+            <a href="{% url 'questions:login' %}" class="btn btn-sm btn-outline-secondary" type="button">Log in</a>
+            <a href="{% url 'questions:register' %}" class="btn btn-outline-success" type="button">Sign Up</a>
+        </form>
+    </div>
 </div>
 
 <div class="content container">
