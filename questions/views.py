@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render, redirect
 from django.utils import timezone
 from django.views import generic
@@ -24,13 +25,9 @@ class QuestionDetailView(generic.DetailView):
         return get_object_or_404(Question, pk=self.kwargs.get('pk'))
 
 
-class NewQuestionView(generic.base.View):
-    def get(self, request, *args, **kwargs):
-        form = NewQuestion()
-        context = {'form': form}
-        return render(request, 'questions/new_question.html', context)
-
-    def post(self, request, *args, **kwargs):
+@login_required(redirect_field_name='next', login_url='/users/login')
+def ask_question(request):
+    if request.method == 'POST':
         form = NewQuestion(data=request.POST)
         if form.is_valid():
             question = form.save(commit=False)
@@ -38,5 +35,8 @@ class NewQuestionView(generic.base.View):
             question.created_date = timezone.now()
             question.save()
             return redirect('questions:detail', question_id=question.pk)
-
-
+        else:
+            return render(request, 'questions/new_question.html', {'form': form, 'error': 'Not valid'})
+    else:
+        form = NewQuestion()
+        return render(request, 'questions/new_question.html', {'form': form})

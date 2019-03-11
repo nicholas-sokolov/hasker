@@ -1,11 +1,17 @@
 {% extends 'questions/base.html' %}
 
 {% block content %}
+    <div class="col-md-10">
+        <h1>Top Questions</h1>
+    </div>
+    <div class="col-md-2 pt-2">
+        <a class="btn btn-primary" href="{% url 'questions:new_question' %}" role="button">ask new question</a>
+    </div>
     {% if latest_question_list %}
         <ul>
-        {% for question in latest_question_list %}
-            <li><a href="{% url 'questions:detail' question.id %}">{{ question.content }}</a></li>
-        {% endfor %}
+            {% for question in latest_question_list %}
+                <li><a href="{% url 'questions:detail' question.id %}">{{ question.content }}</a></li>
+            {% endfor %}
         </ul>
     {% else %}
         <p>No questions</p>
