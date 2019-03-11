@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
-from django.contrib.auth import logout
-from django.shortcuts import render
+from django.contrib.auth import logout, login, authenticate
+from django.shortcuts import render, redirect, HttpResponse
+from django.utils.http import is_safe_url
 from django.views import generic
 
 from questions.models import Question
@@ -54,3 +55,24 @@ class SignUpView(generic.base.View):
 def custom_logout(request):
     logout(request)
     return render(request, 'questions/index.html', {})
+
+
+def user_login(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(username=username, password=password)
+        if user:
+            if user.is_active:
+                login(request, user)
+                redirect_to = request.GET.get('next')
+                if is_safe_url(redirect_to, request.get_host()):
+                    return redirect(redirect_to)
+                else:
+                    return redirect('questions:index')
+            else:
+                return HttpResponse("Your account was inactive.")
+        else:
+            return HttpResponse("Invalid login details given")
+    else:
+        return render(request, 'registration/login.html', {})
