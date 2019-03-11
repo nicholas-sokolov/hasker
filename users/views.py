@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth import logout, login, authenticate
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, HttpResponse
 from django.utils.http import is_safe_url
 from django.views import generic
@@ -52,9 +53,10 @@ class SignUpView(generic.base.View):
         return render(request, 'registration/register.html', {'user_form': user_form, 'profile_form': profile_form})
 
 
+@login_required(login_url='/users/login')
 def custom_logout(request):
     logout(request)
-    return render(request, 'questions/index.html', {})
+    return redirect('questions:index')
 
 
 def user_login(request):
