@@ -8,11 +8,21 @@
         <a class="btn btn-primary" href="{% url 'questions:new_question' %}" role="button">ask new question</a>
     </div>
     {% if latest_question_list %}
-        <ul>
+        <div class="d-flex flex-column bd-highlight mb-3 w-100">
             {% for question in latest_question_list %}
-                <li><a href="{% url 'questions:detail' question.id %}">{{ question.content }}</a></li>
+                <div class="d-flex flex-row p-2 bd-highlight border shadow-sm mt-2">
+                    <div class="d-flex flex-row">
+                        <div class="p-3">votes</div>
+                        <div class="p-3">answers</div>
+                        <div class="p-3">views</div>
+                    </div>
+                    <div class="p-3 d-flex flex-column w-100">
+                        <h3><a href="{% url 'questions:detail' question.id %}">{{ question.title }}</a></h3>
+                        <div class="p-1"><h6>author</h6></div>
+                    </div>
+                </div>
             {% endfor %}
-        </ul>
+        </div>
     {% else %}
         <p>No questions</p>
     {% endif %}
