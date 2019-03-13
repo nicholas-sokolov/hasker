@@ -32,7 +32,7 @@ def view_question(request, pk):
         if form.is_valid():
             answer = form.save(commit=False)
             answer.question = question
-            answer.user = request.user
+            answer.author = request.user.username
             answer.save()
             return redirect(request.path)
         return render(request, 'questions/detail.html', {'question': question})
