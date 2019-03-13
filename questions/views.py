@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.utils import timezone
 from django.views import generic
 
-from .forms import NewQuestion
+from .forms import NewQuestion, AnswerForm
 from .models import Question
 
 
@@ -23,6 +23,21 @@ class QuestionDetailView(generic.DetailView):
 
     def get_object(self, queryset=None):
         return get_object_or_404(Question, pk=self.kwargs.get('pk'))
+
+
+def view_question(request, pk):
+    question = get_object_or_404(Question, pk=pk)
+    if request.method == 'POST':
+        form = AnswerForm(data=request.POST)
+        if form.is_valid():
+            answer = form.save(commit=False)
+            answer.question = question
+            answer.user = request.user
+            answer.save()
+            return redirect(request.path)
+        return render(request, 'questions/detail.html', {'question': question})
+    else:
+        return render(request, 'questions/detail.html', {'question': question})
 
 
 @login_required(redirect_field_name='next', login_url='/users/login')

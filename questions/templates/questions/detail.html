@@ -1,6 +1,38 @@
 {% extends 'questions/base.html' %}
 
 {% block content %}
-<h1>{{ question.title }}</h1>
-<p>{{ question.content }}</p>
+    <div class="d-flex p-2 flex-column w-100">
+        <div class="d-flex p-2 flex-row w-100">
+            <div class="flex-row p-2"><h6>Votes</h6></div>
+            <div class="d-flex p-2 flex-column border w-100">
+                <div class="p-2 d-block border-bottom"><h1>{{ question.title }}</h1></div>
+                <div class="p-2 d-block border-bottom"><p>{{ question.content }}</p></div>
+                <div class="p-2 d-block"><p>tags</p></div>
+            </div>
+        </div>
+        <div class="d-flex p-2 flex-column pt-4">
+            {% if question.answer_set.all %}
+                <h3>Answers</h3>
+                {% for question in question.answer_set.all %}
+                    <div class="d-flex p-2 flex-column border w-100 mt-3">
+                        <p>{{ question.content }}</p>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <h3>No answers</h3>
+            {% endif %}
+        </div>
+
+        <div class="d-flex p-2 flex-column pt-4">
+            <h3>Your Answer</h3>
+            <div class="d-block">
+                <form id="user_form" method="post" action="{% url 'questions:detail' question.pk %}"
+                      enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <textarea class="w-100" name="content"></textarea>
+                    <input class="center w-100" type="submit" name="submit" value="Send"/>
+                </form>
+            </div>
+        </div>
+    </div>
 {% endblock %}
