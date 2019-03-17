@@ -16,7 +16,7 @@ def profile_view(request, slug):
         question_count = Question.objects.filter(author=profile.user).count()
         answer_count = Answer.objects.filter(author=profile.user).count()
         context = {
-            'user': profile,
+            'profile': profile,
             'question_count': question_count,
             'answer_count': answer_count
         }
