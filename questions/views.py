@@ -32,7 +32,7 @@ def view_question(request, pk):
         if form.is_valid():
             answer = form.save(commit=False)
             answer.question = question
-            answer.author = request.user.username
+            answer.author = request.user
             answer.save()
             return redirect(request.path)
         return render(request, 'questions/detail.html', {'question': question})
@@ -49,7 +49,7 @@ def ask_question(request):
             question.author = request.user
             question.created_date = timezone.now()
             question.save()
-            return redirect('questions:detail', question_id=question.pk)
+            return redirect('questions:detail', pk=question.pk)
         else:
             return render(request, 'questions/new_question.html', {'form': form, 'error': 'Not valid'})
     else:

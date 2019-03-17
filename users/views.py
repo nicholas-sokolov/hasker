@@ -1,29 +1,26 @@
-from django.contrib.auth import get_user_model
 from django.contrib.auth import logout, login, authenticate
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect, HttpResponse
+from django.shortcuts import HttpResponse
+from django.shortcuts import get_object_or_404, render, redirect
 from django.utils.http import is_safe_url
 from django.views import generic
 
-from questions.models import Question
+from questions.models import Question, Answer
 from .forms import UserProfileForm, UserForm
 from .models import UserProfile
 
 
-class ProfileView(generic.DetailView):
-    model = get_user_model()
-    template_name = 'accounts/profile.html'
-    slug_field = 'username'
-
-    def get_object(self, queryset=None):
-        user = super().get_object(queryset)
-        UserProfile.objects.get_or_create(user=user)
-        print(UserProfile.objects.all())
-        return user
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['questions'] = Question.objects.filter(author=self.kwargs.get('username'))
+def profile_view(request, slug):
+    if request.method == 'GET':
+        profile = get_object_or_404(UserProfile, user=request.user)
+        question_count = Question.objects.filter(author=profile.user).count()
+        answer_count = Answer.objects.filter(author=profile.user).count()
+        context = {
+            'user': profile,
+            'question_count': question_count,
+            'answer_count': answer_count
+        }
+        return render(request, 'accounts/profile.html', context)
 
 
 class SignUpView(generic.base.View):
