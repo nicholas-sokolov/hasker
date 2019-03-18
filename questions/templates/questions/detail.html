@@ -16,7 +16,8 @@
                 {% for answer in question.answer_set.all %}
                     <div class="d-flex p-2 flex-column border w-100 mt-3">
                         <p>{{ answer.content }}</p>
-                        <h6 class="text-right">{{ answer.author }}</h6>
+                        <a class="text-right"
+                           href="{% url 'users:profile' question.author.username %}">{{ answer.author }}</a>
                     </div>
                 {% endfor %}
             {% else %}
@@ -28,7 +29,7 @@
             {% if user.is_authenticated %}
                 <h3>Your Answer</h3>
                 <div class="d-block">
-                    <form id="user_form" method="post" action="{% url 'questions:detail' question.pk %}"
+                    <form id="user_form" method="post" action="{% url 'questions:detail' question.slug %}"
                           enctype="multipart/form-data">
                         {% csrf_token %}
                         <textarea class="w-100" name="content"></textarea>

@@ -1,10 +1,11 @@
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404, render, redirect
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.views import generic
 
-from .forms import NewQuestion, AnswerForm
-from .models import Question
+from .forms import QuestionForm, AnswerForm
+from .models import Question, Tag
+from .utils import ObjectCreateMixin, ObjectDetailMixin
 
 
 class QuestionListView(generic.ListView):
@@ -17,17 +18,17 @@ class QuestionListView(generic.ListView):
         return Question.objects.order_by('-created_date')
 
 
-class QuestionDetailView(generic.DetailView):
+class TagDetail(ObjectDetailMixin, generic.View):
+    model = Tag
+    template = 'questions/tag_detail.html'
+
+
+class QuestionDetail(ObjectDetailMixin, generic.View):
     model = Question
-    template_name = 'questions/detail.html'
+    template = 'questions/detail.html'
 
-    def get_object(self, queryset=None):
-        return get_object_or_404(Question, pk=self.kwargs.get('pk'))
-
-
-def view_question(request, pk):
-    question = get_object_or_404(Question, pk=pk)
-    if request.method == 'POST':
+    def post(self, request, slug):
+        question = Question.objects.get(slug__iexact=slug)
         form = AnswerForm(data=request.POST)
         if form.is_valid():
             answer = form.save(commit=False)
@@ -35,23 +36,21 @@ def view_question(request, pk):
             answer.author = request.user
             answer.save()
             return redirect(request.path)
-        return render(request, 'questions/detail.html', {'question': question})
-    else:
-        return render(request, 'questions/detail.html', {'question': question})
+        return render(request, self.template, {'form': form})
 
 
-@login_required(redirect_field_name='next', login_url='/users/login')
-def ask_question(request):
-    if request.method == 'POST':
-        form = NewQuestion(data=request.POST)
+class QuestionCreate(LoginRequiredMixin, ObjectCreateMixin, generic.View):
+    form_model = QuestionForm
+    template = 'questions/new_question.html'
+    redirect_field_name = 'next'
+    login_url = '/users/login'
+
+    def post(self, request):
+        form = self.form_model(request.POST)
         if form.is_valid():
             question = form.save(commit=False)
             question.author = request.user
             question.created_date = timezone.now()
             question.save()
-            return redirect('questions:detail', pk=question.pk)
-        else:
-            return render(request, 'questions/new_question.html', {'form': form, 'error': 'Not valid'})
-    else:
-        form = NewQuestion()
-        return render(request, 'questions/new_question.html', {'form': form})
+            return redirect('questions:detail', slug=question.slug)
+        return render(request, self.template, {'form': form})

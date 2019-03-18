@@ -10,26 +10,7 @@
     {% if latest_question_list %}
         <div class="d-flex flex-column bd-highlight mb-3 w-100">
             {% for question in latest_question_list %}
-                <div class="d-flex flex-row pt-1 bd-highlight border shadow-sm mt-2">
-                    <div class="d-flex flex-row">
-                        <div class="d-block flex-column text-center p-2">
-                            <div class="p-1"><p>N/A</p></div>
-                            <div class="p-1">Votes</div>
-                        </div>
-                        <div class="d-block flex-column text-center p-2">
-                            <div class="p-1"><p>{{ question.answer_set.count }}</p></div>
-                            <div class="p-1"><p>Answers</p></div>
-                        </div>
-                        <div class="d-block flex-column text-center p-2">
-                            <div class="p-1"><p>N/A</p></div>
-                            <div class="p-1">Views</div>
-                        </div>
-                    </div>
-                    <div class="p-3 d-flex flex-column w-100">
-                        <h3><a href="{% url 'questions:detail' question.id %}">{{ question.title }}</a></h3>
-                        <div class="p-1 text-right"><h6>{{ question.author }}</h6></div>
-                    </div>
-                </div>
+                {% include 'questions/includes/question_list_template.html' %}
             {% endfor %}
         </div>
     {% else %}
