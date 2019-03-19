@@ -40,6 +40,9 @@ class Question(models.Model):
     def __str__(self):
         return self.title
 
+    class Meta:
+        ordering = ['-created_date']
+
 
 class Answer(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)

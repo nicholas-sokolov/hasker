@@ -31,7 +31,7 @@
         </h3>
         <form class="form-inline">
             <div class="md-form my-0">
-                <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+                <input class="form-control mr-sm-2" type="text" placeholder="Search" name="search" aria-label="Search">
             </div>
             <button class="btn btn-outline-white btn-md my-2 my-sm-0 ml-3" type="submit">Search</button>
         </form>
@@ -60,6 +60,32 @@
     <div class="row mt-5">
         {% block content %}
         {% endblock %}
+        {% if is_paginated %}
+            <nav aria-label="...">
+                <ul class="pagination">
+                    <li class="page-item {% if not prev_url %} disabled {% endif %}">
+                        <a class="page-link" href="{{ prev_url }}">Previous</a>
+                    </li>
+
+                    {% for n in page_object.paginator.page_range %}
+                        {% if page_object.number == n %}
+                            <li class="page-item active">
+                                <a class="page-link" href="?page={{ n }}">{{ n }}
+                                    <span class="sr-only">(current)</span></a>
+                            </li>
+                        {% else %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ n }}">{{ n }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+
+                    <li class="page-item {% if not next_url %} disabled {% endif %}">
+                        <a class="page-link" href="{{ next_url }}">Next</a>
+                    </li>
+                </ul>
+            </nav>
+        {% endif %}
     </div>
 </div>
 </body>

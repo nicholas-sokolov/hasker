@@ -7,9 +7,9 @@
     <div class="col-md-2 pt-2">
         <a class="btn btn-primary" href="{% url 'questions:new_question' %}" role="button">ask new question</a>
     </div>
-    {% if latest_question_list %}
+    {% if page_object %}
         <div class="d-flex flex-column bd-highlight mb-3 w-100">
-            {% for question in latest_question_list %}
+            {% for question in page_object.object_list %}
                 {% include 'questions/includes/question_list_template.html' %}
             {% endfor %}
         </div>
