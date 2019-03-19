@@ -3,6 +3,7 @@ from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.views import generic
+from django.db.models import Q
 
 from .forms import QuestionForm, AnswerForm
 from .models import Question, Tag
@@ -10,10 +11,12 @@ from .utils import ObjectCreateMixin, ObjectDetailMixin
 
 
 def questions_list(request):
-    questions = Question.objects.all()
-    paginator = Paginator(questions, 2)
-
     search_query = request.GET.get('search', '')
+    if search_query:
+        questions = Question.objects.filter(Q(title__icontains=search_query) | Q(content__icontains=search_query))
+    else:
+        questions = Question.objects.all()
+    paginator = Paginator(questions, 20)
 
     page_number = request.GET.get('page', 1)
     page = paginator.get_page(page_number)
