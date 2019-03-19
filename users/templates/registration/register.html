@@ -1,16 +1,34 @@
 {% extends 'questions/base.html' %}
 
 {% block content %}
-    <h1>Sigh Up</h1>
-    {% if registered %}
-        <strong>Thank you for registration!</strong>
-    {% else %}
+    <div class="container-fluid bg-light py-3">
+        <h4>Sigh Up</h4>
+        <br>
         <form id="user_form" method="post" action="{% url 'users:register' %}" enctype="multipart/form-data">
             {% csrf_token %}
-            {{ user_form.as_p }}
-            {{ profile_form.as_p }}
-
-            <input type="submit" name="submit" value="Register"/>
+            {% for field in user_form %}
+                <div class="form-group">
+                    {% if field.errors %}
+                        <div class="alert alert-danger">
+                            {{ field.errors }}
+                        </div>
+                    {% endif %}
+                    {{ field.label }}
+                    {{ field }}
+                </div>
+            {% endfor %}
+            {% for field in profile_form %}
+                <div class="form-group">
+                    {% if field.errors %}
+                        <div class="alert alert-danger">
+                            {{ field.errors }}
+                        </div>
+                    {% endif %}
+                    {{ field.label }}
+                    {{ field }}
+                </div>
+            {% endfor %}
+            <input type="submit" class="btn btn-primary btn-send" name="submit" value="Register"/>
         </form>
-    {% endif %}
+    </div>
 {% endblock %}

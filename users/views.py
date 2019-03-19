@@ -88,8 +88,7 @@ class SignUpView(generic.base.View):
                 profile.picture = request.FILES['picture']
 
             profile.save()
-        else:
-            print(user_form.errors, profile_form.errors)
+            return redirect('users:login')
         return render(request, 'registration/register.html', {'user_form': user_form, 'profile_form': profile_form})
 
 
