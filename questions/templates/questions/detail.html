@@ -1,44 +1,94 @@
 {% extends 'questions/base.html' %}
 
 {% block content %}
-    <div class="d-flex p-2 flex-column w-100">
-        <div class="d-flex p-2 flex-row w-100">
-            <div class="flex-row p-2"><h6>Votes</h6></div>
-            <div class="d-flex p-2 flex-column border w-100">
-                <div class="p-2 d-block border-bottom"><h1>{{ question.title }}</h1></div>
-                <div class="p-2 d-block border-bottom"><p>{{ question.content }}</p></div>
-                <div class="p-2 d-block"><p>tags</p></div>
+    <div class="d-flex flex-row w-100">
+        <div class="d-inline mt-5">
+            <div id="vote-widget" class="upvote">
+                <a class="upvote" id="vote"></a>
+                <span class="count">0</span>
+                <a class="downvote" id="vote"></a>
+                <a class="star" id="vote"></a>
             </div>
         </div>
-        <div class="d-flex p-2 flex-column pt-4">
-            {% if question.answer_set.all %}
-                <h3>Answers</h3>
-                {% for answer in question.answer_set.all %}
-                    <div class="d-flex p-2 flex-column border w-100 mt-3">
-                        <p>{{ answer.content }}</p>
-                        <a class="text-right"
-                           href="{% url 'users:profile' question.author.username %}">{{ answer.author }}</a>
-                    </div>
-                {% endfor %}
-            {% else %}
-                <h3>No answers</h3>
-            {% endif %}
-        </div>
-
-        <div class="d-flex p-2 flex-column pt-4">
-            {% if user.is_authenticated %}
-                <h3>Your Answer</h3>
-                <div class="d-block">
-                    <form id="user_form" method="post" action="{% url 'questions:detail' question.slug %}"
-                          enctype="multipart/form-data">
-                        {% csrf_token %}
-                        <textarea class="w-100" name="content"></textarea>
-                        <input class="center w-100" type="submit" name="submit" value="Send"/>
-                    </form>
+        <div class="card w-100 mt-5">
+            <div class="card-header text-center">
+                {{ question.title }}
+            </div>
+            <div class="card-body">
+                <blockquote class="blockquote mb-0">
+                    <p class="text-center">{{ question.content }}</p>
+                </blockquote>
+            </div>
+            <div class="card-footer d-flex justify-content-between">
+                <div class="p-2 btn btn-secondary">Tag</div>
+                <div class="p-2">{{ question.created_date }}</div>
+                <div class="p-2"><a href="{% url 'users:profile' question.author.username %}"> {{ question.author }}</a>
                 </div>
-            {% else %}
-                <h3>If you want to answer you should authenticate</h3>
-            {% endif %}
+            </div>
         </div>
     </div>
+    {% if question.answer_set.all %}
+        {% for answer in question.answer_set.all %}
+            <div class="d-flex flex-row w-100">
+                <div class="d-inline mt-5">
+                    <div id="vote-widget" class="upvote">
+                        <a class="upvote" id="vote"></a>
+                        <span class="count">0</span>
+                        <a class="downvote" id="vote"></a>
+                        <a class="star" id="vote"></a>
+                    </div>
+                </div>
+                <div class="card w-100 mt-5">
+                    <div class="card-body">
+                        <blockquote class="blockquote mb-0">
+                            <p class="text-center">{{ answer.content }}</p>
+                        </blockquote>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between">
+                        <div class="p-2 btn btn-secondary">Tag</div>
+                        <div class="p-2">{{ question.created_date }}</div>
+                        <div class="p-2"><a
+                                href="{% url 'users:profile' question.author.username %}">{{ answer.author }}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <h3>No answers</h3>
+    {% endif %}
+    <br>
+    <div class="d-flex flex-column mt-4 w-50">
+        {% if user.is_authenticated %}
+            <h3>Your Answer</h3>
+            <div class="d-block">
+                <form id="user_form" method="post" action="{% url 'questions:detail' question.slug %}"
+                      enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <textarea class="form-control mb-3" name="content"></textarea>
+                    <input class="btn btn-primary" type="submit" name="submit" value="Send"/>
+                </form>
+            </div>
+        {% else %}
+            <h3>If you want to answer you should authenticate</h3>
+        {% endif %}
+    </div>
+
+    <script>
+        widget1 = Upvote.create('vote-widget', {callback: fn1});
+
+        function fn1(data_widget) {
+            console.log(data_widget);
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'questions:detail' question.slug %}",
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    data: JSON.stringify({'vote_widget': data_widget})
+                },
+                dataType: 'json',
+            });
+        }
+
+    </script>
 {% endblock %}

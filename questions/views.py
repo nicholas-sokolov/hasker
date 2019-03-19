@@ -28,6 +28,7 @@ class QuestionDetail(ObjectDetailMixin, generic.View):
     template = 'questions/detail.html'
 
     def post(self, request, slug):
+        # TODO: processing ov votes
         question = Question.objects.get(slug__iexact=slug)
         form = AnswerForm(data=request.POST)
         if form.is_valid():
@@ -54,3 +55,8 @@ class QuestionCreate(LoginRequiredMixin, ObjectCreateMixin, generic.View):
             question.save()
             return redirect('questions:detail', slug=question.slug)
         return render(request, self.template, {'form': form})
+
+
+def get_vote_view(request):
+
+    return print(request.POST['text'])
