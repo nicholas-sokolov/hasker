@@ -22,7 +22,7 @@
             <div class="card-footer d-flex justify-content-between">
                 <div class="p-2 btn btn-secondary">Tag</div>
                 <div class="p-2">{{ question.created_date }}</div>
-                <div class="p-2"><a href="{% url 'users:profile' question.author.username %}"> {{ question.author }}</a>
+                <div class="p-2"><a href="{% url 'users:profile' question.author.pk %}"> {{ question.author }}</a>
                 </div>
             </div>
         </div>
@@ -48,7 +48,7 @@
                         <div class="p-2 btn btn-secondary">Tag</div>
                         <div class="p-2">{{ question.created_date }}</div>
                         <div class="p-2"><a
-                                href="{% url 'users:profile' question.author.username %}">{{ answer.author }}</a>
+                                href="{% url 'users:profile' question.author.pk %}">{{ answer.author }}</a>
                         </div>
                     </div>
                 </div>

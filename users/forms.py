@@ -15,4 +15,8 @@ class UserForm(forms.ModelForm):
 class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
-        fields = ('picture', 'website')
+        fields = ['picture', ]
+
+        widgets = {
+            'picture': forms.FileInput(attrs={'class': 'file-upload'}),
+        }

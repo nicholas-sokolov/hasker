@@ -10,9 +10,9 @@ from .forms import UserProfileForm, UserForm
 from .models import UserProfile
 
 
-def profile_view(request, slug):
+def profile_view(request, pk):
     if request.method == 'GET':
-        profile = get_object_or_404(UserProfile, user=request.user)
+        profile = get_object_or_404(UserProfile, pk=pk)
         question_count = Question.objects.filter(author=profile.user).count()
         answer_count = Answer.objects.filter(author=profile.user).count()
         context = {
@@ -21,6 +21,49 @@ def profile_view(request, slug):
             'answer_count': answer_count
         }
         return render(request, 'accounts/profile.html', context)
+    else:
+        profile = get_object_or_404(UserProfile, user=request.user)
+        form = UserProfileForm(request.POST)
+        if form.is_valid():
+            profile = form.save(commit=False)
+            if 'picture' in request.FILES:
+                profile.picture = request.FILES['picture']
+            profile.save()
+
+    return render(request, 'accounts/profile.html', context={
+        'profile': profile,
+        'question_count': 0,
+        'answer_count': 0
+    })
+
+
+class ProfileView(generic.View):
+    def get(self, request, *args, **kwargs):
+        profile = UserProfile.objects.get(user=request.user)
+        question_count = Question.objects.filter(author=profile.user).count()
+        answer_count = Answer.objects.filter(author=profile.user).count()
+        context = {
+            'profile': profile,
+            'question_count': question_count,
+            'answer_count': answer_count
+        }
+        return render(request, 'accounts/profile.html', context)
+
+    def post(self, request, *args, **kwargs):
+        form = UserProfileForm(request.POST)
+        if form.is_valid():
+            profile = UserProfile.objects.get(user_id=request.user.pk)
+            if 'picture' in request.FILES:
+                profile.picture = request.FILES['picture']
+            profile.save()
+            question_count = Question.objects.filter(author=profile.user).count()
+            answer_count = Answer.objects.filter(author=profile.user).count()
+            context = {
+                'profile': profile,
+                'question_count': question_count,
+                'answer_count': answer_count
+            }
+            return render(request, 'accounts/profile.html', context)
 
 
 class SignUpView(generic.base.View):

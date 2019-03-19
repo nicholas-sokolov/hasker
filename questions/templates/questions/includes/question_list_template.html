@@ -16,7 +16,7 @@
         <div class="card-footer bg-white p-0">
             <div class="d-flex flex-row justify-content-between">
                 <div class="p-3">Tags</div>
-                <div class="p-3"><a href="{% url 'users:profile' question.author.username %}">{{ question.author }}</a>
+                <div class="p-3"><a href="{% url 'users:profile' question.author.pk %}">{{ question.author }}</a>
                 </div>
             </div>
         </div>
