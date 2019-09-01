@@ -1,13 +1,16 @@
 language: python
 
-python:
-  - 3.7
+matrix:
+    include:
+        - python: 3.7
+          dist: xenial
+          sudo: true
 
 install:
   - pip install -r requirements.txt
 
 before_script:
-  - python manage.py makemigrations --noinput
+  - python manage.py makemigrations
   - python manage.py migrate --noinput
   - python manage.py collectstatic
 
