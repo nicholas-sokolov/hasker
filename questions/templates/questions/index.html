@@ -1,19 +1,23 @@
 {% extends 'questions/base.html' %}
 
 {% block content %}
-    <div class="col-md-10">
-        <h1>Top Questions</h1>
-    </div>
-    <div class="col-md-2 pt-2">
-        <a class="btn btn-primary" href="{% url 'questions:new_question' %}" role="button">ask new question</a>
-    </div>
-    {% if page_object %}
-        <div class="d-flex flex-column bd-highlight mb-3 w-100">
-            {% for question in page_object.object_list %}
-                {% include 'questions/includes/question_list_template.html' %}
-            {% endfor %}
+    <div class="head-container">
+        <div class="title">
+            <h1>Top Questions</h1>
         </div>
-    {% else %}
-        <p>No questions</p>
-    {% endif %}
+        <div class="ask-question-button">
+            <a class="btn btn-primary" href="{% url 'questions:new_question' %}" role="button">ask new question</a>
+        </div>
+    </div>
+    <div style="width: 100%">
+        {% if page_object %}
+            <div class="d-flex flex-column bd-highlight mb-3 w-100">
+                {% for question in page_object.object_list %}
+                    {% include 'questions/includes/question_list_template.html' %}
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>No questions</p>
+        {% endif %}
+    </div>
 {% endblock %}

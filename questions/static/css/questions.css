@@ -1,0 +1,28 @@
+.avatar {
+    vertical-align: middle;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+.head-container {
+    display: flex;
+    height: 150px;
+    align-content: center;
+}
+
+.title {
+    align-self: center;
+    width: 80%;
+}
+
+.ask-question-button {
+    align-self: center;
+}
+
+.ask-question-container {
+    width: 700px;
+    background: #fff;
+    position: relative;
+    padding: 55px 85px;
+}

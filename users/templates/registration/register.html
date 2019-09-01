@@ -1,7 +1,7 @@
 {% extends 'questions/base.html' %}
 
 {% block content %}
-    <div class="container-fluid bg-light py-3">
+    <div class="registration_form">
         <h4>Sigh Up</h4>
         <br>
         <form id="user_form" method="post" action="{% url 'users:register' %}" enctype="multipart/form-data">
@@ -14,6 +14,7 @@
                         </div>
                     {% endif %}
                     {{ field.label }}
+                <br>
                     {{ field }}
                 </div>
             {% endfor %}

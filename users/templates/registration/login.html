@@ -1,7 +1,7 @@
 {% extends 'questions/base.html' %}
 
 {% block content %}
-    <div class="col-md-12">
+    <div class="login_form">
         <h1>Login</h1>
         {% if request.GET.next %}
             <form id="login_form" method="post" action="{% url 'users:login' %}?next={{ request.GET.next }}">

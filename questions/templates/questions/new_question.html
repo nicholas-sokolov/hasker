@@ -1,7 +1,7 @@
 {% extends 'questions/base.html' %}
 
 {% block content %}
-    <div class="container-fluid bg-light py-3">
+    <div class="ask-question-container">
         <h2>Ask a question</h2>
         <form method="post" action="{% url 'questions:new_question' %}" role="form">
             {% csrf_token %}

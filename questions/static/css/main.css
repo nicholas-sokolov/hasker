@@ -1,0 +1,17 @@
+.login_form {
+    width: 560px;
+    background: #fff;
+    border-radius: 10px;
+    position: relative;
+    padding: 55px 85px;
+}
+
+.registration_form {
+    width: 560px;
+    background: #fff;
+    border-radius: 10px;
+    position: relative;
+    padding: 55px 85px;
+}
+
+

@@ -1,7 +1,14 @@
+import json
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+config_file = os.path.join('config.json')
+with open(config_file) as file:
+    config_data = json.load(file)
+for key, value in config_data.items():
+    os.environ[key] = value
 
 # Package root is for inside the project
 PACKAGE_ROOT = os.path.abspath(os.path.dirname(__file__))
@@ -25,7 +32,7 @@ TEMPLATE_DIRS = [
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '5=8evpmqgth(q6m^kyg@-ds&!=unh!poal@j&r2h8+330y+7i8'
+SECRET_KEY = os.environ['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
